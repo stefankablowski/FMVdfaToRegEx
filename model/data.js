@@ -25,18 +25,10 @@ module.exports = () => {
         }
     });
 
-    console.log("should be 2: " + dfa.transition(1, 'a').value);
-    console.log('∅ε');
+    let alphabet = RegularExp.createAlphabet(['a','b','∅','ε']);
 
-    let a = new RegularExp('a');
-    let b = new RegularExp('b');
+    let myexp = alphabet.a.concat(alphabet.b).concat(alphabet.a);
 
-    let alphabet = [a,b]
-
-    let myexp = RegularExp.concat(a,b);
-    myexp = RegularExp.concat(myexp,b);
     console.log(myexp.toString());
-
     return true;
-
 }
