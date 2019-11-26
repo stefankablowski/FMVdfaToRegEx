@@ -18,7 +18,7 @@ module.exports = (dfa) => {
             //Find transitions directing to state j
             Object.entries(currentState).forEach(([symbol,nextState])=>{
                 if(String(nextState) === String(j)){
-                    regs.push(new RegularExp('base',symbol));
+                    regs.push(new RegularExp(symbol));
                 }
             });
         }
@@ -26,11 +26,11 @@ module.exports = (dfa) => {
         
         //Case: i = j
         if(i === j){
-            regs.push(new RegularExp('base','ɛ'));
+            regs.push(RegularExp.getEpsilon());
         }
 
         if(!regs.length){
-            regs.push(new RegularExp('base','∅'));
+            regs.push(RegularExp.getEmptySet());
         }
         //Disjun all paths
         if(regs.length > 1){
@@ -108,7 +108,7 @@ module.exports = (dfa) => {
         }
     }
 
-    //printarray();
+    printarray();
 
     //TESTS
 
@@ -116,7 +116,7 @@ module.exports = (dfa) => {
 
     let tests = {
         aConcatEpsilon: alphabet.a.concat(alphabet.ɛ),
-        epsilonConcatA: alphabet.getEpsilon().concat(alphabet.a),
+        epsilonConcatA: RegularExp.getEpsilon().concat(alphabet.a),
         aConcatEmptySet: alphabet.a.concat(RegularExp.getEmptySet()),
         aConcatAkleene: alphabet.a.concat(alphabet.a.kleene()),
         
@@ -124,7 +124,7 @@ module.exports = (dfa) => {
         aDisjunAKleene: alphabet.a.disjun(alphabet.a.kleene()),
         aKleeneDisjunA: alphabet.a.kleene().disjun(alphabet.a),
         aDisjunEpsilon: alphabet.a.disjun(RegularExp.getEpsilon()),
-        epsilonDisjunA: RegularExp.getEpsilon().disjun(a),
+        epsilonDisjunA: RegularExp.getEpsilon().disjun(alphabet.a),
         aDisjunEmptySet: alphabet.a.disjun(RegularExp.getEmptySet()),
         emptySetDisjunA: RegularExp.getEmptySet().disjun(alphabet.a),
 

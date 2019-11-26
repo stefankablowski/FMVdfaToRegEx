@@ -1,5 +1,5 @@
 module.exports = class RegularExp{
-    constructor(type = 'base', value = null, left = null, right = null){
+    constructor(value = null, type = 'base', left = null, right = null){
         if(value != null){
             this.value = value;
             //Use ɛ for Epsilon and ∅ for empty set
@@ -17,17 +17,17 @@ module.exports = class RegularExp{
     static createAlphabet(array){
         let result = {}
         array.forEach(element => {
-            result[element] = new RegularExp('base',element);
+            result[element] = new RegularExp(element);
         });
         return result;
     }
 
     static getEpsilon(){
-        return new RegularExp('base','ɛ');
+        return new RegularExp('ɛ');
     }
 
     static getEmptySet(){
-        return new RegularExp('base','∅');
+        return new RegularExp('∅');
     }
 
     toString(){
@@ -44,15 +44,15 @@ module.exports = class RegularExp{
     }
 
     concat(regex2){
-        return new RegularExp('concat', null, this, regex2);
+        return new RegularExp(null, 'concat', this, regex2);
     }
 
     kleene(){
-        return new RegularExp('kleene', null, this, null);
+        return new RegularExp(null, 'kleene', this, null);
     }
 
     disjun(regex2){
-        return new RegularExp('disjun', null, this, regex2);
+        return new RegularExp(null, 'disjun', this, regex2);
     }
 
     simplify(){
