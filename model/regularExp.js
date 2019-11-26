@@ -2,6 +2,7 @@ module.exports = class RegularExp{
     constructor(type = 'base', value = null, left = null, right = null){
         if(value != null){
             this.value = value;
+            //Use ɛ for Epsilon and ∅ for empty set
         }
         this.type = type;
         //Left and right will store binary operations
@@ -30,7 +31,7 @@ module.exports = class RegularExp{
         }else if(this.type === 'kleene'){
             return '(' + this.left.toString() + ')*';
         }else if(this.type === 'disjun'){
-            return regex1.toString() + "+" + regex2.toString();
+            return this.left.toString() + "+" + this.right.toString();
         }
     }
 

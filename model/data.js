@@ -2,33 +2,113 @@ const RegularExp = require('./RegularExp');
 const Machine = require('xstate').Machine;
 //import { Machine } from 'xstate';
 
-module.exports = () => {
-    let dfa = Machine({
-        initial: '1',
-        states: {
-            1: {
-                on: {
-                    a: '2',
-                    b: '3',
+module.exports = (dfa) => {
+
+    /* Returns an array of regular expressions from i to j*/
+    let iToJ = (i,j)=>{
+        //Only loop through transitions starting at state i
+        let currentState = dfa.states[i].on;
+
+        //List of all found regex
+        let regs = new Array();
+        
+        //Make sure path is not empty
+        if(!(currentState === null || currentState === undefined)){
+
+            //Find transitions directing to state j
+            Object.entries(currentState).forEach(([symbol,nextState])=>{
+                if(String(nextState) === String(j)){
+                    regs.push(new RegularExp('base',symbol));
                 }
-            },
-            2: {
-                on: {
-                    a: '2',
-                    b: '3',
-                }
-            },
-            3: {
-                on: {
+            });
+        }
+
+        
+        //Case: i = j
+        if(i === j){
+            regs.push(new RegularExp('base','ɛ'));
+        }
+
+        if(!regs.length){
+            regs.push(new RegularExp('base','∅'));
+        }
+        //Disjun all paths
+        if(regs.length > 1){
+            result = regs[0];
+            for(let x = 1; x < regs.length; x++){
+                result = result.disjun(regs[x]);
+            }
+            return result;
+        }else{
+            return regs[0];
+        }
+    }
+
+    let numberOfStates = Object.keys(dfa.states).length;
+    console.log(`Number of States : ${numberOfStates}`)
+
+    //contains regContainer[k][i][j]
+    let regContainer = new Array(numberOfStates+1);
+    
+    //Create 3d array
+    for (let i = 0; i < numberOfStates+1; i++) {
+        regContainer[i] = new Array(numberOfStates);
+        for (let j = 0; j < numberOfStates; j++) {
+            regContainer[i][j] = new Array(numberOfStates);
+            for(let pr = 0; pr < numberOfStates; pr++){
+                regContainer[i][j][pr] = {toString: function(){
+                    return "-"
+                }}
+            }
+        }
+    }
+
+    let setRegAt = (regex,k,i,j)=>{
+        regContainer[k][i-1][j-1] = regex;
+    }
+
+    let getRegAt = (k,i,j)=>{
+        return regContainer[k][i-1][j-1];
+    }
+    let printarray = ()=>{
+        for(let k = 0; k <= numberOfStates; k++){
+            console.log(`--------------- k = ${k} --------------`)
+            for(let i = 1; i <= numberOfStates; i++){
+                for(let j = 1; j <= numberOfStates; j++){
+                    console.log(`${k}${i}${j}: ${getRegAt(k,i,j).toString()}`);
                 }
             }
         }
-    });
+    }
 
-    let alphabet = RegularExp.createAlphabet(['a','b','∅','ε']);
+    printarray();
 
-    let myexp = alphabet.a.concat(alphabet.b).concat(alphabet.a);
+    for(let k = 0; k <= numberOfStates; k++){
+        for(let i = 1; i <= numberOfStates; i++){
+            for(let j = 1; j <= numberOfStates; j++){
+                //Base case
+                if(k === 0){
+                    console.log(`k = ${k}, i = ${i}, j = ${j}`);
+                    setRegAt(iToJ(i,j),k,i,j);
+                }else{
+                    
+                    //Known from before
+                    let newReg = getRegAt(k-1,i,j);
+                    //New result
+                    newReg = newReg.disjun(
+                        getRegAt(k-1,i,k).concat(
+                            getRegAt(k-1,k,k).kleene()
+                            .concat( getRegAt(k-1,k,j))
+                        )
+                    )
+                    setRegAt(newReg,k,i,j);
+                    
+                }
+            }
+        }
+    }
 
-    console.log(myexp.toString());
+    printarray();
+
     return true;
 }
