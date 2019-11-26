@@ -56,7 +56,67 @@ module.exports = class RegularExp{
     }
 
     simplify(){
-        return this;
+        if(this.type === 'base'){
+            return new RegularExp(this.value);
+        }
+        else if(this.type === 'concat'){
+            if(this.left.isEmptySet() || this.right.isEmptySet()){
+                return RegularExp.getEmptySet();
+            }else if(this.left.isEpsilon() || this.right.isEpsilon()){
+                //NEED TO FIX
+                console.log('fix me');
+                return RegularExp.getEpsilon();
+            }else{
+                //a(a)* = (a)*
+                if(this.right.type === 'kleene'){
+                    if(`(${this.left.toString()})*` === this.right.toString()){
+                        return new RegularExp(null, 'kleene', this.left.simplify(), null);
+                    }
+                }
+                //(a)*a
+                else if(this.left.type === 'kleene'){
+                    if(this.left.toString() === `(${this.right.toString()})*`){
+                        return new RegularExp(null, 'kleene', this.right.simplify(), null);
+                    }
+                }
+                else{
+                    return this;
+                }
+                
+            }
+        }else if(this.type === 'kleene'){
+            //epsilon*
+            if(this.left.isEpsilon()){
+                return RegularExp.getEpsilon();
+            }else if(this.left.isEmptySet()){
+                //Not a bug, emptyset* is epsilon
+                return RegularExp.getEpsilon();
+            }
+            //((a)*)*
+            else if(this.left.type === 'kleene'){
+                return new RegularExp(null, 'kleene', this.left.left);
+            }else{
+                return this;
+            }
+            
+        }else if(this.type === 'disjun'){
+            if(this.left.isEpsilon() || this.right.isEpsilon()){
+
+            }
+            //a+a
+            else if(this.left.toString() === this.right.toString()){
+                return this.left.simplify();
+            }
+            return this;
+        }
+    }
+
+    isEmptySet(){
+        return ((this.type === 'base') && (this.value==='∅'));
+
+    }
+    isEpsilon(){
+        return ((this.type === 'base') && (this.value==='ɛ'));
     }
 }
 

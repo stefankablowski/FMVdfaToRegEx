@@ -119,7 +119,8 @@ module.exports = (dfa) => {
         epsilonConcatA: RegularExp.getEpsilon().concat(alphabet.a),
         aConcatEmptySet: alphabet.a.concat(RegularExp.getEmptySet()),
         aConcatAkleene: alphabet.a.concat(alphabet.a.kleene()),
-        
+        aKleeneConcatA: alphabet.a.kleene().concat(alphabet.a),
+
         aDisjunA: alphabet.a.disjun(alphabet.a),
         aDisjunAKleene: alphabet.a.disjun(alphabet.a.kleene()),
         aKleeneDisjunA: alphabet.a.kleene().disjun(alphabet.a),
