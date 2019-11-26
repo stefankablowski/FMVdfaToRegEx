@@ -81,7 +81,7 @@ module.exports = (dfa) => {
         }
     }
 
-    printarray();
+    //printarray();
 
     for(let k = 0; k <= numberOfStates; k++){
         for(let i = 1; i <= numberOfStates; i++){
@@ -108,7 +108,34 @@ module.exports = (dfa) => {
         }
     }
 
-    printarray();
+    //printarray();
+
+    //TESTS
+
+    let alphabet = RegularExp.createAlphabet(['a','b','ɛ','∅']);
+
+    let tests = {
+        aConcatEpsilon: alphabet.a.concat(alphabet.ɛ),
+        epsilonConcatA: alphabet.getEpsilon().concat(alphabet.a),
+        aConcatEmptySet: alphabet.a.concat(RegularExp.getEmptySet()),
+        aConcatAkleene: alphabet.a.concat(alphabet.a.kleene()),
+        
+        aDisjunA: alphabet.a.disjun(alphabet.a),
+        aDisjunAKleene: alphabet.a.disjun(alphabet.a.kleene()),
+        aKleeneDisjunA: alphabet.a.kleene().disjun(alphabet.a),
+        aDisjunEpsilon: alphabet.a.disjun(RegularExp.getEpsilon()),
+        epsilonDisjunA: RegularExp.getEpsilon().disjun(a),
+        aDisjunEmptySet: alphabet.a.disjun(RegularExp.getEmptySet()),
+        emptySetDisjunA: RegularExp.getEmptySet().disjun(alphabet.a),
+
+        aKleeneKleene: alphabet.a.kleene().kleene(),
+        epsilonKleene: RegularExp.getEpsilon().kleene(),
+        emptySetKleene: RegularExp.getEmptySet().kleene(),
+    }
+
+    Object.entries(tests).forEach(([key,value]) => {
+        console.log(`${key}: ${value.simplify()}`)
+    });
 
     return true;
 }

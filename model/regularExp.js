@@ -22,6 +22,14 @@ module.exports = class RegularExp{
         return result;
     }
 
+    static getEpsilon(){
+        return new RegularExp('base','ɛ');
+    }
+
+    static getEmptySet(){
+        return new RegularExp('base','∅');
+    }
+
     toString(){
         if(this.type === 'base'){
             return this.value;
@@ -45,6 +53,10 @@ module.exports = class RegularExp{
 
     disjun(regex2){
         return new RegularExp('disjun', null, this, regex2);
+    }
+
+    simplify(){
+        return this;
     }
 }
 
