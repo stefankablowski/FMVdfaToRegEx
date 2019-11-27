@@ -94,7 +94,8 @@ class RegularExp{
                     }
                 }
                 else{
-                    return this.left.simplify().concat(this.right.simplify());
+                    //return this.left.simplify().concat(this.right.simplify());
+                    return new RegularExp(null, 'concat', this.left.simplify(),this.right.simplify());
                 }
                 
             }
@@ -110,7 +111,8 @@ class RegularExp{
             else if(this.left.type === 'kleene'){
                 return this.left.simplify();
             }else{
-                return this.left.simplify().kleene();
+                //return this.left.simplify().kleene();
+                return new RegularExp(null, 'kleene', this.left.simplify(), null);
             }
             
         }else if(this.type === 'disjun'){
@@ -137,7 +139,8 @@ class RegularExp{
             }else if(`(${this.left.toString()})*`  ===  this.right.toString()){
                 return this.right.simplify();
             }else{
-                return this.left.simplify().disjun(this.right.simplify());
+                //return this.left.simplify().disjun(this.right.simplify());
+                return new RegularExp(null, 'disjun', this.left.simplify(), this.right.simplify());
             }
             
         }

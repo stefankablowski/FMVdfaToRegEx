@@ -131,7 +131,8 @@ let dfaToRegEx = (dfa) => {
         epsilonKleene: RegularExp.getEpsilon().kleene(),
         emptySetKleene: RegularExp.getEmptySet().kleene(),
 
-        complicated1: alphabet.a.disjun(alphabet.a.kleene().concat(alphabet.a.kleene())).disjun(alphabet.a),
+        notworking1: RegularExp.getEpsilon().disjun(
+            RegularExp.getEpsilon().concat(RegularExp.getEpsilon().kleene().concat()).concat(RegularExp.getEpsilon())),
     }
 
     Object.entries(tests).forEach(([key,value]) => {
