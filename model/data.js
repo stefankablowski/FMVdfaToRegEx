@@ -135,7 +135,7 @@ module.exports = (dfa) => {
     }
 
     Object.entries(tests).forEach(([key,value]) => {
-        console.log(`${key}: ${value.simplify()}`)
+        console.log(`${value} \t : ${value.simplify()}`)
     });
 
     return true;

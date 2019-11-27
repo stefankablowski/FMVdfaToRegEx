@@ -60,13 +60,19 @@ module.exports = class RegularExp{
             return new RegularExp(this.value);
         }
         else if(this.type === 'concat'){
+            //emptySet concat something = empty set
             if(this.left.isEmptySet() || this.right.isEmptySet()){
                 return RegularExp.getEmptySet();
-            }else if(this.left.isEpsilon() || this.right.isEpsilon()){
-                //NEED TO FIX
-                console.log('fix me');
+            //Epsilon concat epsilon = epsilon
+            }else if(this.left.isEpsilon() && this.right.isEpsilon()){
                 return RegularExp.getEpsilon();
-            }else{
+            //Epsilon concat something = something
+            }else if(this.left.isEpsilon() && !(this.right.isEpsilon())){
+                return this.right.simplify();
+            }else if(!(this.left.isEpsilon()) && this.right.isEpsilon()){
+                return this.left.simplify();
+            }else
+            {
                 //a(a)* = (a)*
                 if(this.right.type === 'kleene'){
                     if(`(${this.left.toString()})*` === this.right.toString()){
@@ -100,14 +106,32 @@ module.exports = class RegularExp{
             }
             
         }else if(this.type === 'disjun'){
-            if(this.left.isEpsilon() || this.right.isEpsilon()){
-
+            if(this.left.isEpsilon() && this.right.isEpsilon()){
+                return RegularExp.getEpsilon();
+            }
+            //emptySet + emptySet = emptySet
+            else if(this.left.isEmptySet() && this.right.isEmptySet()){
+                return RegularExp.getEmptySet();
+            //emptySet + a = a
+            }else if(this.left.isEmptySet() && !(this.right.isEmptySet())){
+                return this.right.simplify();
+            //a + emptySet = a
+            }else if(!(this.left.isEmptySet()) && this.right.isEmptySet()){
+                return this.left.simplify();
             }
             //a+a
             else if(this.left.toString() === this.right.toString()){
                 return this.left.simplify();
+            //(a)*+a = (a)*
+            }else if(this.left.toString() === `(${this.right.toString()})*`){
+                return this.left.simplify();
+            //a+(a)* = (a)*
+            }else if(`(${this.left.toString()})*`  ===  this.right.toString()){
+                return this.right.simplify();
+            }else{
+                return this;
             }
-            return this;
+            
         }
     }
 
