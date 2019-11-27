@@ -14,7 +14,7 @@ let dfaToRegEx = (dfa) => {
             //Find transitions directing to state j
             Object.entries(currentState).forEach(([symbol,nextState])=>{
                 if(String(nextState) === String(j)){
-                    regs.push(new RegularExp(symbol));
+                    regs.push(new RegularExp(String(symbol)));
                 }
             });
         }
@@ -41,7 +41,7 @@ let dfaToRegEx = (dfa) => {
     }
 
     let numberOfStates = Object.keys(dfa.states).length;
-    console.log(`Number of States : ${numberOfStates}`)
+
 
     //contains regContainer[k][i][j]
     let regContainer = new Array(numberOfStates+1);
@@ -71,7 +71,10 @@ let dfaToRegEx = (dfa) => {
             console.log(`--------------- k = ${k} --------------`)
             for(let i = 1; i <= numberOfStates; i++){
                 for(let j = 1; j <= numberOfStates; j++){
-                    console.log(`${k}${i}${j}: ${getRegAt(k,i,j).toString()} ${getRegAt(k,i,j).simplify().toString()}`);
+                    let currentReg = getRegAt(k,i,j);
+                    let currentRegSimple = currentReg.simplify();
+                    console.log(`${k}${i}${j}: ${currentReg.toString()}`);
+                    console.log(`${currentRegSimple.toString()}`);
                 }
             }
         }
@@ -84,7 +87,6 @@ let dfaToRegEx = (dfa) => {
             for(let j = 1; j <= numberOfStates; j++){
                 //Base case
                 if(k === 0){
-                    console.log(`k = ${k}, i = ${i}, j = ${j}`);
                     setRegAt(iToJ(i,j),k,i,j);
                 }else{
                     
@@ -104,7 +106,7 @@ let dfaToRegEx = (dfa) => {
         }
     }
 
-    //printarray();
+    printarray();
 
     //TESTS
 
@@ -132,12 +134,13 @@ let dfaToRegEx = (dfa) => {
         emptySetKleene: RegularExp.getEmptySet().kleene(),
 
         notworking1: RegularExp.getEpsilon().disjun(
-            RegularExp.getEpsilon().concat(RegularExp.getEpsilon().kleene().concat()).concat(RegularExp.getEpsilon())),
+            RegularExp.getEpsilon().concat(RegularExp.getEpsilon().kleene().concat(RegularExp.getEpsilon()))),
         test2: RegularExp.getEmptySet().concat(RegularExp.getEmptySet())
         }
 
     Object.entries(tests).forEach(([key,value]) => {
-        console.log(`${value.toString()} \t : ${value.simplify().simplify().simplify().toString()}`)
+        console.log(`${value.toString()} \t : ${value.simplify().toString()}`);
+        
     });
 
     return true;

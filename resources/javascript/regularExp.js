@@ -2,18 +2,13 @@ class RegularExp {
     constructor(value = null, type = 'base', left = null, right = null) {
         if (value != null) {
             this.value = value;
-            //Use ɛ for Epsilon and ∅ for empty set
         }
         this.type = type;
-        //Left and right will store binary operations
-        //On unary operations left will store the regex
         this.left = left;
         this.right = right;
     }
 
-    /*Takes an array of strings 
-    and returns object of regex containing these strings
-    */
+    /* Takes an array of strings and returns object of regex containing these strings */
     static createAlphabet(array) {
         let result = {}
         array.forEach(element => {
@@ -40,6 +35,8 @@ class RegularExp {
             return '(' + this.left.toString() + ')*';
         } else if (this.type === 'disjun') {
             return this.left.toString() + "+" + this.right.toString();
+        } else {
+            console.log('error error error tostring');
         }
     }
 
@@ -56,6 +53,7 @@ class RegularExp {
     }
 
     simplify() {
+        //console.log(`Current : ${this.toString()}`);
         if (this.type === 'base') {
             return new RegularExp(this.value);
         }
@@ -117,6 +115,7 @@ class RegularExp {
             else if (this.left.isEmptySet()) {
                 return RegularExp.getEpsilon();
             }
+
             //((a)*)*
             else if (this.left.type === 'kleene') {
                 return this.left.simplify();
@@ -151,12 +150,12 @@ class RegularExp {
             }
 
             //(a)* + a = (a)*
-            else if (this.left.toString() === `(${this.right.toString()})*`) {
+            else if (this.left.toString() === `(${this.right.toString()})*` && this.left.type === 'kleene') {
                 return this.left.simplify();
             }
 
             // a + (a)* = (a)*
-            else if (`(${this.left.toString()})*` === this.right.toString()) {
+            else if (`(${this.left.toString()})*` === this.right.toString() && this.right.type === 'kleene') {
                 return this.right.simplify();
             }
 

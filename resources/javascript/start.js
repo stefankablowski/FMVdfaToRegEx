@@ -20,5 +20,5 @@ let dfa = {
 }
 
 window.onload = ()=>{
-    dfaToRegEx(dfa);
+        dfaToRegEx(dfa);
 }
