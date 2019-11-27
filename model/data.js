@@ -75,7 +75,7 @@ module.exports = (dfa) => {
             console.log(`--------------- k = ${k} --------------`)
             for(let i = 1; i <= numberOfStates; i++){
                 for(let j = 1; j <= numberOfStates; j++){
-                    console.log(`${k}${i}${j}: ${getRegAt(k,i,j).toString()}`);
+                    console.log(`${k}${i}${j}: ${getRegAt(k,i,j).toString()} ${getRegAt(k,i,j).simplify().toString()}`);
                 }
             }
         }
@@ -118,8 +118,10 @@ module.exports = (dfa) => {
         aConcatEpsilon: alphabet.a.concat(alphabet.ɛ),
         epsilonConcatA: RegularExp.getEpsilon().concat(alphabet.a),
         aConcatEmptySet: alphabet.a.concat(RegularExp.getEmptySet()),
+        emptySetConcatA: RegularExp.getEmptySet().concat(alphabet.a),
         aConcatAkleene: alphabet.a.concat(alphabet.a.kleene()),
         aKleeneConcatA: alphabet.a.kleene().concat(alphabet.a),
+        aKleeneConcatAKleene: alphabet.a.kleene().concat(alphabet.a.kleene()),
 
         aDisjunA: alphabet.a.disjun(alphabet.a),
         aDisjunAKleene: alphabet.a.disjun(alphabet.a.kleene()),

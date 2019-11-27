@@ -69,10 +69,17 @@ module.exports = class RegularExp{
             //Epsilon concat something = something
             }else if(this.left.isEpsilon() && !(this.right.isEpsilon())){
                 return this.right.simplify();
+            //a concat epsilon = a
             }else if(!(this.left.isEpsilon()) && this.right.isEpsilon()){
                 return this.left.simplify();
             }else
             {
+                //(a)*(a)*
+                if(     (this.left.toString() === this.right.toString())
+                        && (this.left.type === 'kleene' && this.right.type === 'kleene')
+                ){
+                    return this.left.simplify();
+                }
                 //a(a)* = (a)*
                 if(this.right.type === 'kleene'){
                     if(`(${this.left.toString()})*` === this.right.toString()){
