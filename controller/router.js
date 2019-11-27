@@ -7,18 +7,18 @@ module.exports = (app, data)=>{
     app.listen(1234, '0.0.0.0');
 
     //Set up middleware for static files
-    app.use('/uniKasselVV/resources', express.static('resources'));
+    app.use('/dfa/resources', express.static('resources'));
     
     //Serve HTML
-    app.get('/uniKasselVV',(req, res)=>{
+    app.get('/dfa',(req, res)=>{
         res.sendFile(path.resolve('index.html'));
     });
-    app.get('/uniKasselVV/',(req, res)=>{
+    app.get('/dfa/',(req, res)=>{
         res.sendFile(path.resolve('index.html'));
     });
     
     //Get user data
-    app.get('/uniKasselVV/data',(req, res)=>{
+    app.get('/dfa/data',(req, res)=>{
         data()
         .then(a => {
             res.type("json");
