@@ -102,7 +102,14 @@ class RegularExp {
             //Nothing else worked
             else {
                 //return this.left.simplify().concat(this.right.simplify());
-                return new RegularExp(null, 'concat', this.left.simplify(), this.right.simplify());
+                let simpleLeft = this.left.simplify();
+                let simpleRight = this.right.simplify();
+                if(simpleLeft !== null && simpleRight !== null){
+                    return new RegularExp(null, 'concat', simpleLeft, simpleRight);
+                }else{
+                    return this;
+                }
+                
             }
 
         } else if (this.type === 'kleene') {
@@ -123,8 +130,14 @@ class RegularExp {
 
             //nothing else worked
             else {
+                let simpleLeft = this.left.simplify();
+                if(simpleLeft !== null && simpleRight !== null){
+                    return new RegularExp(null, 'kleene', simpleLeft, null);
+                }else{
+                    return this;
+                }
                 //return this.left.simplify().kleene();
-                return new RegularExp(null, 'kleene', this.left.simplify(), null);
+                
             }
 
         } else if (this.type === 'disjun') {
@@ -161,8 +174,15 @@ class RegularExp {
 
             //Nothing else worked
             else {
+                let simpleLeft = this.left.simplify();
+                let simpleRight = this.right.simplify();
+                if(simpleLeft !== null && simpleRight !== null){
+                    return new RegularExp(null, 'disjun', simpleLeft, simpleRight);
+                }else{
+                    return this;
+                }
                 //return this.left.simplify().disjun(this.right.simplify());
-                return new RegularExp(null, 'disjun', this.left.simplify(), this.right.simplify());
+                
             }
 
         }

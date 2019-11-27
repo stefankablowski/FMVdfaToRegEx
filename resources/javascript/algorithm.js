@@ -94,10 +94,7 @@ let dfaToRegEx = (dfa) => {
                     let newReg = getRegAt(k-1,i,j);
                     //New result
                     newReg = newReg.disjun(
-                        getRegAt(k-1,i,k).concat(
-                            getRegAt(k-1,k,k).kleene()
-                            .concat( getRegAt(k-1,k,j))
-                        )
+                        getRegAt(k-1,i,k).concat(getRegAt(k-1,k,k).kleene()).concat( getRegAt(k-1,k,j))
                     )
                     setRegAt(newReg,k,i,j);
                     
