@@ -133,7 +133,8 @@ let dfaToRegEx = (dfa) => {
 
         notworking1: RegularExp.getEpsilon().disjun(
             RegularExp.getEpsilon().concat(RegularExp.getEpsilon().kleene().concat()).concat(RegularExp.getEpsilon())),
-    }
+        test2: RegularExp.getEmptySet().concat(RegularExp.getEmptySet())
+        }
 
     Object.entries(tests).forEach(([key,value]) => {
         console.log(`${value.toString()} \t : ${value.simplify().simplify().simplify().toString()}`)
