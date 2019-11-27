@@ -93,7 +93,7 @@ module.exports = class RegularExp{
                     }
                 }
                 else{
-                    return this;
+                    return this.left.simplify().concat(this.right.simplify());
                 }
                 
             }
@@ -109,7 +109,7 @@ module.exports = class RegularExp{
             else if(this.left.type === 'kleene'){
                 return new RegularExp(null, 'kleene', this.left.left);
             }else{
-                return this;
+                return this.left.simplify().kleene();
             }
             
         }else if(this.type === 'disjun'){
@@ -136,7 +136,7 @@ module.exports = class RegularExp{
             }else if(`(${this.left.toString()})*`  ===  this.right.toString()){
                 return this.right.simplify();
             }else{
-                return this;
+                return this.left.simplify().disjun(this.right.simplify());
             }
             
         }

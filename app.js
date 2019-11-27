@@ -8,6 +8,7 @@ router(app, data);
 
 console.log("hello");
 
+/*
 data({
     initial: '1',
     states: {
@@ -28,5 +29,6 @@ data({
     },
     final: [3],
 });
+*/
 
 
