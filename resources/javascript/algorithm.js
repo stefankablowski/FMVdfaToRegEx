@@ -104,7 +104,7 @@ let dfaToRegEx = (dfa) => {
         }
     }
 
-    printarray();
+    //printarray();
 
     //TESTS
 
@@ -130,10 +130,12 @@ let dfaToRegEx = (dfa) => {
         aKleeneKleene: alphabet.a.kleene().kleene(),
         epsilonKleene: RegularExp.getEpsilon().kleene(),
         emptySetKleene: RegularExp.getEmptySet().kleene(),
+
+        complicated1: alphabet.a.disjun(alphabet.a.kleene().concat(alphabet.a.kleene())).disjun(alphabet.a),
     }
 
     Object.entries(tests).forEach(([key,value]) => {
-        console.log(`${value} \t : ${value.simplify()}`)
+        console.log(`${value.toString()} \t : ${value.simplify().simplify().simplify().toString()}`)
     });
 
     return true;
