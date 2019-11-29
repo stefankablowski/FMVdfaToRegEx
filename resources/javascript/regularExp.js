@@ -46,11 +46,11 @@ class RegularExp {
             return this.value;
         }
         else if (this.type === 'concat') {
-            return this.left.toString() + this.right.toString();
+            return '(' + this.left.toString() + this.right.toString() + ')';
         } else if (this.type === 'kleene') {
             return '(' + this.left.toString() + ')*';
         } else if (this.type === 'disjun') {
-            return this.left.toString() + "+" + this.right.toString();
+            return '(' + this.left.toString() + "+" + this.right.toString() + ')';
         } else {
             console.log('error error error tostring');
         }
@@ -71,137 +71,122 @@ class RegularExp {
     simplify() {
         //console.log(`Current : ${this.toString()}`);
         if (this.type === 'base') {
-            //return new RegularExp(this.value);
-            return this;
+            return new RegularExp(this.value);
         }
 
         else if (this.type === 'concat') {
-            //∅a = ∅
-            if (this.left.isEmptySet() || this.right.isEmptySet()) {
-                return RegularExp.getEmptySet();
-            }
-
-            //ɛɛ = ɛ
-            else if (this.left.isEpsilon() && this.right.isEpsilon()) {
-                return RegularExp.getEpsilon();
-            }
-
-            //ɛa = a
-            else if (this.left.isEpsilon() && !(this.right.isEpsilon())) {
-                return this.right.simplify();
-            }
-
-            //aɛ = a
-            else if (!(this.left.isEpsilon()) && this.right.isEpsilon()) {
-                return this.left.simplify();
-            }
-
-            //(a)*(a)* = (a)*
-            else if ((this.left.toString() === this.right.toString())
-                && (this.left.type === 'kleene' && this.right.type === 'kleene')) {
-                return this.left.simplify();
-            }
-
-            //a(a)* = (a)*
-            else if (this.right.type === 'kleene') {
-                if (`(${this.left.toString()})*` === this.right.toString()) {
-                    return this.right.simplify();
-                }
-            }
-
-            //(a)*a = (a)*
-            else if (this.left.type === 'kleene') {
-                if (this.left.toString() === `(${this.right.toString()})*`) {
-                    return this.left.simplify();
-                }
-            }
-
-            //Nothing else worked
-            else {
-                //return this.left.simplify().concat(this.right.simplify());
-                let simpleLeft = this.left.simplify();
-                let simpleRight = this.right.simplify();
-                if(simpleLeft !== null && simpleRight !== null){
-                    return new RegularExp(null, 'concat', simpleLeft, simpleRight);
-                }else{
-                    return this;
-                }
-                
-            }
-
+            return this.simplifyConcat();
         } else if (this.type === 'kleene') {
-            //(ɛ)* = ɛ
-            if (this.left.isEpsilon()) {
-                return RegularExp.getEpsilon();
-            }
-
-            //(∅)* = ɛ
-            else if (this.left.isEmptySet()) {
-                return RegularExp.getEpsilon();
-            }
-
-            //((a)*)*
-            else if (this.left.type === 'kleene') {
-                return this.left.simplify();
-            }
-
-            //nothing else worked
-            else {
-                let simpleLeft = this.left.simplify();
-                if(simpleLeft !== null && simpleRight !== null){
-                    return new RegularExp(null, 'kleene', simpleLeft, null);
-                }else{
-                    return this;
-                }
-                //return this.left.simplify().kleene();
-                
-            }
-
+            return this.simplifyKleene();
         } else if (this.type === 'disjun') {
+            return this.simplifyDisjun();
+        }
+    }
 
-            // ∅ + ∅ = ∅
-            if (this.left.isEmptySet() && this.right.isEmptySet()) {
-                return RegularExp.getEmptySet();
-            }
+    simplifyDisjun() {
+        // ∅ + ∅ = ∅
+        if (this.left.isEmptySet() && this.right.isEmptySet()) {
+            return RegularExp.getEmptySet();
+        }
 
-            // ∅ + a = a
-            else if (this.left.isEmptySet() && !(this.right.isEmptySet())) {
+        // ∅ + a = a
+        else if (this.left.isEmptySet() && !(this.right.isEmptySet())) {
+            return this.right.simplify();
+        }
+
+        // a + ∅ = a
+        else if (!(this.left.isEmptySet()) && this.right.isEmptySet()) {
+            return this.left.simplify();
+        }
+
+        //a+a
+        else if (this.left.toString() === this.right.toString()) {
+            return this.left.simplify();
+        }
+
+        //(a)* + a = (a)*
+        else if (this.left.toString() === `(${this.right.toString()})*` && this.left.type === 'kleene') {
+            return this.left.simplify();
+        }
+
+        // a + (a)* = (a)*
+        else if (`(${this.left.toString()})*` === this.right.toString() && this.right.type === 'kleene') {
+            return this.right.simplify();
+        }
+
+        //Nothing else worked
+        else {
+            return this.left.simplify().disjun(this.right.simplify());
+
+        }
+    }
+
+    simplifyConcat() {
+        //∅a = ∅
+        if (this.left.isEmptySet() || this.right.isEmptySet()) {
+            return RegularExp.getEmptySet();
+        }
+
+        //ɛɛ = ɛ
+        else if (this.left.isEpsilon() && this.right.isEpsilon()) {
+            return RegularExp.getEpsilon();
+        }
+
+        //ɛa = a
+        else if (this.left.isEpsilon() && !(this.right.isEpsilon())) {
+            return this.right.simplify();
+        }
+
+        //aɛ = a
+        else if (!(this.left.isEpsilon()) && this.right.isEpsilon()) {
+            return this.left.simplify();
+        }
+
+        //(a)*(a)* = (a)*
+        else if ((this.left.toString() === this.right.toString())
+            && (this.left.type === 'kleene' && this.right.type === 'kleene')) {
+            return this.left.simplify();
+        }
+
+        //a(a)* = (a)*
+        else if (this.right.type === 'kleene') {
+            if (`(${this.left.toString()})*` === this.right.toString()) {
                 return this.right.simplify();
             }
+        }
 
-            // a + ∅ = a
-            else if (!(this.left.isEmptySet()) && this.right.isEmptySet()) {
+        //(a)*a = (a)*
+        else if (this.left.type === 'kleene') {
+            if (this.left.toString() === `(${this.right.toString()})*`) {
                 return this.left.simplify();
             }
+        }
 
-            //a+a
-            else if (this.left.toString() === this.right.toString()) {
-                return this.left.simplify();
-            }
+        //Nothing else worked
+        else {
+            return this.left.simplify().concat(this.right.simplify());
+        }
+    }
 
-            //(a)* + a = (a)*
-            else if (this.left.toString() === `(${this.right.toString()})*` && this.left.type === 'kleene') {
-                return this.left.simplify();
-            }
+    simplifyKleene() {
+        //(ɛ)* = ɛ
+        if (this.left.isEpsilon()) {
+            return RegularExp.getEpsilon();
+        }
 
-            // a + (a)* = (a)*
-            else if (`(${this.left.toString()})*` === this.right.toString() && this.right.type === 'kleene') {
-                return this.right.simplify();
-            }
+        //(∅)* = ɛ
+        else if (this.left.isEmptySet()) {
+            return RegularExp.getEpsilon();
+        }
 
-            //Nothing else worked
-            else {
-                let simpleLeft = this.left.simplify();
-                let simpleRight = this.right.simplify();
-                if(simpleLeft !== null && simpleRight !== null){
-                    return new RegularExp(null, 'disjun', simpleLeft, simpleRight);
-                }else{
-                    return this;
-                }
-                //return this.left.simplify().disjun(this.right.simplify());
-                
-            }
+        //((a)*)*
+        else if (this.left.type === 'kleene') {
+            return this.left.simplify();
+        }
 
+        //nothing else worked
+        else {
+            return this.left.simplify().kleene();
         }
     }
 

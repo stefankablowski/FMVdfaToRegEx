@@ -80,8 +80,6 @@ let dfaToRegEx = (dfa) => {
         }
     }
 
-    //printarray();
-
     for(let k = 0; k <= numberOfStates; k++){
         for(let i = 1; i <= numberOfStates; i++){
             for(let j = 1; j <= numberOfStates; j++){
