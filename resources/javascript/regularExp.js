@@ -17,21 +17,21 @@ class RegularExp {
         return result;
     }
 
-    /*
     static equals(regex1, regex2){
         if(regex1.type === regex2.type){
             if(regex1.type === 'base'){
-                if(regex1.value === regex2.value){
-                    return true;
-                }
+                return (regex1.value === regex2.value);
             }else if(regex1.type === 'concat'){
-                return RegularExp.equals(regex1.left,regex2.left) && RegularExp.equals(regex1.right,regex2.right)
+                return RegularExp.equals(regex1.left,regex2.left) && RegularExp.equals(regex1.right,regex2.right);
+            }else if(regex1.type === 'disjun'){
+                return RegularExp.equals(regex1.left,regex2.left) && RegularExp.equals(regex1.right,regex2.right);
+            }else if(regex1.type === 'kleene'){
+                return RegularExp.equals(regex1.left,regex2.left);
             }
         }else{
             return false;
         }
     }
-    */
 
     static getEpsilon() {
         return new RegularExp('ɛ');
