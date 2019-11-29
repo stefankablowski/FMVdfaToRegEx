@@ -1,41 +1,41 @@
 let dfaToRegEx = (dfa) => {
 
     /* Returns an array of regular expressions from i to j*/
-    let iToJ = (i,j)=>{
+    let iToJ = (i, j) => {
         //Only loop through transitions starting at state i
         let currentState = dfa.states[i].on;
 
         //List of all found regex
         let regs = new Array();
-        
+
         //Make sure path is not empty
-        if(!(currentState === null || currentState === undefined)){
+        if (!(currentState === null || currentState === undefined)) {
 
             //Find transitions directing to state j
-            Object.entries(currentState).forEach(([symbol,nextState])=>{
-                if(String(nextState) === String(j)){
+            Object.entries(currentState).forEach(([symbol, nextState]) => {
+                if (String(nextState) === String(j)) {
                     regs.push(new RegularExp(String(symbol)));
                 }
             });
         }
 
-        
+
         //Case: i = j
-        if(i === j){
+        if (i === j) {
             regs.push(RegularExp.getEpsilon());
         }
 
-        if(!regs.length){
+        if (!regs.length) {
             regs.push(RegularExp.getEmptySet());
         }
         //Disjun all paths
-        if(regs.length > 1){
+        if (regs.length > 1) {
             result = regs[0];
-            for(let x = 1; x < regs.length; x++){
+            for (let x = 1; x < regs.length; x++) {
                 result = result.disjun(regs[x]);
             }
             return result;
-        }else{
+        } else {
             return regs[0];
         }
     }
@@ -44,34 +44,36 @@ let dfaToRegEx = (dfa) => {
 
 
     //contains regContainer[k][i][j]
-    let regContainer = new Array(numberOfStates+1);
-    
+    let regContainer = new Array(numberOfStates + 1);
+
     //Create 3d array
-    for (let i = 0; i < numberOfStates+1; i++) {
+    for (let i = 0; i < numberOfStates + 1; i++) {
         regContainer[i] = new Array(numberOfStates);
         for (let j = 0; j < numberOfStates; j++) {
             regContainer[i][j] = new Array(numberOfStates);
-            for(let pr = 0; pr < numberOfStates; pr++){
-                regContainer[i][j][pr] = {toString: function(){
-                    return "-"
-                }}
+            for (let pr = 0; pr < numberOfStates; pr++) {
+                regContainer[i][j][pr] = {
+                    toString: function () {
+                        return "-"
+                    }
+                }
             }
         }
     }
 
-    let setRegAt = (regex,k,i,j)=>{
-        regContainer[k][i-1][j-1] = regex;
+    let setRegAt = (regex, k, i, j) => {
+        regContainer[k][i - 1][j - 1] = regex;
     }
 
-    let getRegAt = (k,i,j)=>{
-        return regContainer[k][i-1][j-1];
+    let getRegAt = (k, i, j) => {
+        return regContainer[k][i - 1][j - 1];
     }
-    let printarray = ()=>{
-        for(let k = 0; k <= numberOfStates; k++){
+    let printarray = () => {
+        for (let k = 0; k <= numberOfStates; k++) {
             console.log(`--------------- k = ${k} --------------`)
-            for(let i = 1; i <= numberOfStates; i++){
-                for(let j = 1; j <= numberOfStates; j++){
-                    let currentReg = getRegAt(k,i,j);
+            for (let i = 1; i <= numberOfStates; i++) {
+                for (let j = 1; j <= numberOfStates; j++) {
+                    let currentReg = getRegAt(k, i, j);
                     let currentRegSimple = currentReg.simplify();
                     console.log(`${k}${i}${j}: ${currentReg.toString()}`);
                     console.log(`${currentRegSimple.toString()}`);
@@ -80,32 +82,32 @@ let dfaToRegEx = (dfa) => {
         }
     }
 
-    for(let k = 0; k <= numberOfStates; k++){
-        for(let i = 1; i <= numberOfStates; i++){
-            for(let j = 1; j <= numberOfStates; j++){
+    for (let k = 0; k <= numberOfStates; k++) {
+        for (let i = 1; i <= numberOfStates; i++) {
+            for (let j = 1; j <= numberOfStates; j++) {
                 //Base case
-                if(k === 0){
-                    setRegAt(iToJ(i,j),k,i,j);
-                }else{
-                    
+                if (k === 0) {
+                    setRegAt(iToJ(i, j), k, i, j);
+                } else {
+
                     //Known from before
-                    let newReg = getRegAt(k-1,i,j);
+                    let newReg = getRegAt(k - 1, i, j);
                     //New result
                     newReg = newReg.disjun(
-                        getRegAt(k-1,i,k).concat(getRegAt(k-1,k,k).kleene()).concat( getRegAt(k-1,k,j))
+                        getRegAt(k - 1, i, k).concat(getRegAt(k - 1, k, k).kleene()).concat(getRegAt(k - 1, k, j))
                     )
-                    setRegAt(newReg,k,i,j);
-                    
+                    setRegAt(newReg, k, i, j);
+
                 }
             }
         }
     }
 
-    printarray();
+    //printarray();
 
     //TESTS
 
-    let alphabet = RegularExp.createAlphabet(['a','b','ɛ','∅']);
+    let alphabet = RegularExp.createAlphabet(['a', 'b', 'ɛ', '∅']);
 
     let tests = {
         aConcatEpsilon: alphabet.a.concat(alphabet.ɛ),
@@ -131,12 +133,14 @@ let dfaToRegEx = (dfa) => {
         notworking1: RegularExp.getEpsilon().disjun(
             RegularExp.getEpsilon().concat(RegularExp.getEpsilon().kleene().concat(RegularExp.getEpsilon()))),
         test2: RegularExp.getEmptySet().concat(RegularExp.getEmptySet())
-        }
+    }
 
-    Object.entries(tests).forEach(([key,value]) => {
-        console.log(`${value.toString()} \t : ${value.simplify().toString()}`);
-        
-    });
+    let runTests = () => {
+        Object.entries(tests).forEach(([key, value]) => {
+            console.log(`${value.toString()} \t : ${value.simplify().toString()}`);
+
+        });
+    }
 
     return true;
 }
