@@ -74,7 +74,7 @@ let dfaToRegEx = (dfa) => {
             for (let i = 1; i <= numberOfStates; i++) {
                 for (let j = 1; j <= numberOfStates; j++) {
                     let currentReg = getRegAt(k, i, j);
-                    let currentRegSimple = currentReg.simplify();
+                    let currentRegSimple = currentReg.simplifyMax();
                     console.log(`${k}${i}${j}: ${currentReg.toString()}`);
                     console.log(`${currentRegSimple.toString()}`);
                 }
@@ -103,7 +103,7 @@ let dfaToRegEx = (dfa) => {
         }
     }
 
-    //printarray();
+    printarray();
 
     //TESTS
 

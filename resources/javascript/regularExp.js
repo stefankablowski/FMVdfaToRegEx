@@ -68,6 +68,16 @@ class RegularExp {
         return new RegularExp(null, 'disjun', this, regex2);
     }
 
+    simplifyMax(){
+        let lastSimplification = this;
+        let newSimplification = this.simplify();
+        while(!(RegularExp.equals(lastSimplification,newSimplification))){
+            lastSimplification = newSimplification;
+            newSimplification = newSimplification.simplify();
+        }
+        return newSimplification;
+    }
+
     simplify() {
         //console.log(`Current : ${this.toString()}`);
         if (this.type === 'base') {
@@ -81,6 +91,7 @@ class RegularExp {
         } else if (this.type === 'disjun') {
             return this.simplifyDisjun();
         }
+        console.log('Simplifying invalid object');
     }
 
     simplifyDisjun() {
@@ -115,10 +126,8 @@ class RegularExp {
         }
 
         //Nothing else worked
-        else {
-            return this.left.simplify().disjun(this.right.simplify());
+        return this.left.simplify().disjun(this.right.simplify());
 
-        }
     }
 
     simplifyConcat() {
@@ -144,28 +153,24 @@ class RegularExp {
 
         //(a)*(a)* = (a)*
         else if ((this.left.toString() === this.right.toString())
-            && (this.left.type === 'kleene' && this.right.type === 'kleene')) {
+            && (this.left.type === 'kleene')
+            && (this.right.type === 'kleene')) {
             return this.left.simplify();
         }
 
         //a(a)* = (a)*
-        else if (this.right.type === 'kleene') {
-            if (`(${this.left.toString()})*` === this.right.toString()) {
-                return this.right.simplify();
-            }
+        else if ((this.right.type === 'kleene') && (`(${this.left.toString()})*` === this.right.toString())) {
+            return this.right.simplify();
         }
 
         //(a)*a = (a)*
-        else if (this.left.type === 'kleene') {
-            if (this.left.toString() === `(${this.right.toString()})*`) {
-                return this.left.simplify();
-            }
+        else if ((this.left.type === 'kleene') && (this.left.toString() === `(${this.right.toString()})*`)) {
+            return this.left.simplify();
         }
 
         //Nothing else worked
-        else {
-            return this.left.simplify().concat(this.right.simplify());
-        }
+        return this.left.simplify().concat(this.right.simplify());
+
     }
 
     simplifyKleene() {
@@ -185,9 +190,7 @@ class RegularExp {
         }
 
         //nothing else worked
-        else {
-            return this.left.simplify().kleene();
-        }
+        return this.left.simplify().kleene();
     }
 
     isEmptySet() {
