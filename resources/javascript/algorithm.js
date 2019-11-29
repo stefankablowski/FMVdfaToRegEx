@@ -142,5 +142,8 @@ let dfaToRegEx = (dfa) => {
         });
     }
 
+    console.log(RegularExp.equals(RegularExp.getEmptySet().disjun(alphabet.a),RegularExp.getEmptySet().disjun(alphabet.a)));
+    console.log(RegularExp.equals(alphabet.a.concat(alphabet.ɛ),RegularExp.getEmptySet().disjun(alphabet.a)));
+
     return true;
 }
