@@ -158,11 +158,6 @@ class RegularExp {
             return this.left.simplify();
         }
 
-        //a(a)* = (a)*
-        else if ((this.right.type === 'kleene') && (`(${this.left.toString()})*` === this.right.toString())) {
-            return this.right.simplify();
-        }
-
         //(a)*a = (a)*
         else if ((this.left.type === 'kleene') && (this.left.toString() === `(${this.right.toString()})*`)) {
             return this.left.simplify();
@@ -187,6 +182,16 @@ class RegularExp {
         //((a)*)*
         else if (this.left.type === 'kleene') {
             return this.left.simplify();
+        }
+
+        //((ɛ+a))*
+        else if ((this.left.type === 'disjun') && (this.left.left.isEpsilon()) && !(this.left.right.isEpsilon())) {
+            return this.left.right.simplify().kleene();
+        }
+
+        //((a+ɛ))*
+        else if ((this.left.type === 'disjun') && !(this.left.left.isEpsilon()) && (this.left.right.isEpsilon())) {
+            return this.left.left.simplify().kleene();
         }
 
         //nothing else worked
