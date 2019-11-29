@@ -17,6 +17,22 @@ class RegularExp {
         return result;
     }
 
+    /*
+    static equals(regex1, regex2){
+        if(regex1.type === regex2.type){
+            if(regex1.type === 'base'){
+                if(regex1.value === regex2.value){
+                    return true;
+                }
+            }else if(regex1.type === 'concat'){
+                return RegularExp.equals(regex1.left,regex2.left) && RegularExp.equals(regex1.right,regex2.right)
+            }
+        }else{
+            return false;
+        }
+    }
+    */
+
     static getEpsilon() {
         return new RegularExp('ɛ');
     }
@@ -55,7 +71,8 @@ class RegularExp {
     simplify() {
         //console.log(`Current : ${this.toString()}`);
         if (this.type === 'base') {
-            return new RegularExp(this.value);
+            //return new RegularExp(this.value);
+            return this;
         }
 
         else if (this.type === 'concat') {
