@@ -1,4 +1,4 @@
-let dfaToRegEx = (dfa) => {
+let dfaToRegEx = (dfa, simplifyFlag) => {
 
     /* Returns an array of regular expressions from i to j*/
     let iToJ = (i, j) => {
@@ -109,7 +109,20 @@ let dfaToRegEx = (dfa) => {
                     setRegAt(newReg, k, i, j);
 
                 }
-                createEntry(k,i,j,getRegAt(k, i, j).toString(),getRegAt(k, i, j).simplifyMax().toString());
+                
+                //only if part results should be simplified
+                if(simplifyFlag){
+                    let beforeSimplification = getRegAt(k,i,j);
+                    let afterSimplification = beforeSimplification.simplifyMax();
+                    setRegAt(afterSimplification, k, i, j);
+                    createEntry(k,i,j,beforeSimplification.toString(),afterSimplification.toString());
+                }else{
+                    createEntry(k,i,j,getRegAt(k,i,j),getRegAt(k,i,j).simplifyMax().toString());
+                }
+
+
+                
+
             }
         }
     }

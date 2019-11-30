@@ -1,4 +1,5 @@
 let allEntries = new Array();
+let simplify = false;
 
 let dfa = {
     initial: '1',
@@ -49,15 +50,29 @@ window.onload = ()=>{
 }
 
 let printLine = (entry) => {
-    document.getElementById('entries').innerHTML +=
-    `    
-    <tr>
-    <th scope="row">${entry.k}</th>
-    <td>${entry.i}</td>
-    <td>${entry.j}</td>
-    <td>${entry.reg}</td>
-  </tr>
-    `
+    if(!simplify){
+        document.getElementById('entries').innerHTML +=
+        `    
+        <tr>
+        <th scope="row">${entry.k}</th>
+        <td>${entry.i}</td>
+        <td>${entry.j}</td>
+        <td>${entry.reg}</td>
+      </tr>
+        `
+    }else{
+        document.getElementById('entries').innerHTML +=
+        `    
+        <tr>
+        <th scope="row">${entry.k}</th>
+        <td>${entry.i}</td>
+        <td>${entry.j}</td>
+        <td>${entry.reg}</td>
+        <td>${entry.simplified}</td>
+      </tr>
+        `
+    }
+
 
 }
 
@@ -66,6 +81,12 @@ let clearLines = ()=>{
 }
 
 let startAlgorithm = ()=>{
+
+    if(document.getElementById('simplifyBox').checked){
+        simplify = true;
+    }else{
+        simplify = false;
+    }
     document.getElementById('nextStep').classList.add('hidden');
     clearLines();
     currentPos = 0;
@@ -75,14 +96,14 @@ let startAlgorithm = ()=>{
     let badJSONdfa = String(document.getElementById('inputDFA').value).replace(/(\r\n|\n|\r)/gm, "");
     goodJSONdfa = badJSONdfa.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
     parsedDFA = JSON.parse(goodJSONdfa);
-    dfaToRegEx(parsedDFA);
+    dfaToRegEx(parsedDFA,simplify);
 
     if(document.getElementById('goInStepsBox').checked){
         document.getElementById('nextStep').classList.remove('hidden');
+    }else{
+        allEntries.forEach((entry)=>{printLine(entry)});
     }
-    if(document.getElementById('simplifyBox').checked){
 
-    }
 
 
     
