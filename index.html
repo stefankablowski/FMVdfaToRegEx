@@ -7,7 +7,7 @@
 </head>
 
 <body class="bg-light">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row text-center">
             <h1>Regular Expression to DFA Conversion</h1>
         </div>
@@ -34,7 +34,7 @@
                 <h4 class="mb-3">Algorithmus</h4>
                 <div class="jumbotron">
                     <button id="startAlgorithm" class="btn btn-primary">Start Algorithm</button>
-                    <button id="nextStep" class="btn btn-primary">Next Step</button>
+                    <button id="nextStep" class="btn btn-primary hidden">Next Step</button>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="goInStepsBox">
                         <label class="form-check-label" for="goInStepsBox">
@@ -48,19 +48,20 @@
                         </label>
                     </div>
                 </div>
-                
-                <table id="outputTable" class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">i</th>
-                            <th scope="col">j</th>
-                            <th scope="col">Regular Expression</th>
-                          </tr>
-                        </thead>
-                        <tbody id="entries">
-                        </tbody>
-                      </table>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table id="outputTable" class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">k</th>
+                                <th scope="col">i</th>
+                                <th scope="col">j</th>
+                                <th scope="col">Regular Expression</th>
+                                </tr>
+                            </thead>
+                            <tbody id="entries">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

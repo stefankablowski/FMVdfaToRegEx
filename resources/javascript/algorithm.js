@@ -85,7 +85,7 @@ let dfaToRegEx = (dfa) => {
             console.log(`--------------- k = ${k} --------------`)
             for (let i = 1; i <= numberOfStates; i++) {
                 for (let j = 1; j <= numberOfStates; j++) {
-                    createEntry(k,i,j,getRegAt(k, i, j).toString(),getRegAt(k, i, j).simplifyMax().toString());
+                    //createEntry(k,i,j,getRegAt(k, i, j).toString(),getRegAt(k, i, j).simplifyMax().toString());
                     //console.log(`${k}${i}${j}:${getRegAt(k, i, j).toString()} : ${getRegAt(k, i, j).simplifyMax().toString()}`);
                 }
             }
@@ -113,9 +113,6 @@ let dfaToRegEx = (dfa) => {
             }
         }
     }
-
-    printarray();
-
 
 
     //TESTS
