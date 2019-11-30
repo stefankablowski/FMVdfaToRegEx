@@ -68,12 +68,25 @@ let dfaToRegEx = (dfa) => {
     let getRegAt = (k, i, j) => {
         return regContainer[k][i - 1][j - 1];
     }
+
+
+    let createEntry = (k,i,j,reg,simplified)=>{
+        allEntries.push({
+            k: k,
+            i: i,
+            j: j,
+            reg: reg,
+            simplified: simplified
+        })
+    }
+
     let printarray = () => {
         for (let k = 0; k <= numberOfStates; k++) {
             console.log(`--------------- k = ${k} --------------`)
             for (let i = 1; i <= numberOfStates; i++) {
                 for (let j = 1; j <= numberOfStates; j++) {
-                    console.log(`${k}${i}${j}:${getRegAt(k, i, j).toString()} : ${getRegAt(k, i, j).simplifyMax().toString()}`);
+                    createEntry(k,i,j,getRegAt(k, i, j).toString(),getRegAt(k, i, j).simplifyMax().toString());
+                    //console.log(`${k}${i}${j}:${getRegAt(k, i, j).toString()} : ${getRegAt(k, i, j).simplifyMax().toString()}`);
                 }
             }
         }
@@ -93,14 +106,17 @@ let dfaToRegEx = (dfa) => {
                     newReg = newReg.disjun(
                         getRegAt(k - 1, i, k).concat(getRegAt(k - 1, k, k).kleene()).concat(getRegAt(k - 1, k, j))
                     )
-                    setRegAt(newReg.simplifyMax(), k, i, j);
+                    setRegAt(newReg, k, i, j);
 
                 }
+                createEntry(k,i,j,getRegAt(k, i, j).toString(),getRegAt(k, i, j).simplifyMax().toString());
             }
         }
     }
 
     printarray();
+
+
 
     //TESTS
 
