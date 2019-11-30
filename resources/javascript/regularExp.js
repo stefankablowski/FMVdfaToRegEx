@@ -46,7 +46,7 @@ class RegularExp {
             return this.value;
         }
         else if (this.type === 'concat') {
-            return '(' + this.left.toString() + this.right.toString() + ')';
+            return this.left.toString() + this.right.toString();
         } else if (this.type === 'kleene') {
             return '(' + this.left.toString() + ')*';
         } else if (this.type === 'disjun') {

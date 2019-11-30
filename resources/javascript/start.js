@@ -1,4 +1,5 @@
 let allEntries = new Array();
+let resultRegex = null;
 let simplify = false;
 
 let dfa = {
@@ -82,8 +83,10 @@ let clearLines = ()=>{
 
 let startAlgorithm = ()=>{
 
+    document.getElementById('resultContainer').classList.add('hidden');
     if(document.getElementById('simplifyBox').checked){
         simplify = true;
+        document.getElementById('resultContainer').classList.remove('hidden');
     }else{
         simplify = false;
     }
@@ -97,8 +100,11 @@ let startAlgorithm = ()=>{
     goodJSONdfa = badJSONdfa.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
     parsedDFA = JSON.parse(goodJSONdfa);
     dfaToRegEx(parsedDFA,simplify);
+    document.getElementById('finalResult').innerHTML = resultRegex.toString();
+    
 
     if(document.getElementById('goInStepsBox').checked){
+        
         document.getElementById('nextStep').classList.remove('hidden');
     }else{
         allEntries.forEach((entry)=>{printLine(entry)});

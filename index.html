@@ -7,14 +7,14 @@
 </head>
 
 <body class="bg-light">
-    <div class="container-fluid">
+    <div class="container-fluid m-2 mr-2">
         <div class="row text-center">
             <h1>Regular Expression to DFA Conversion</h1>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <form>
-                    <h4 class="mb-3">Eingabe DFA</h4>
+                    <h4 class="mb-4">Eingabe DFA</h4>
                     <div class="form-group">
                         <label for="selectExample">Examples</label>
                         <select class="form-control" id="selectExample">
@@ -30,22 +30,36 @@
                     
                 </form>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <h4 class="mb-3">Algorithmus</h4>
-                <div class="jumbotron">
-                    <button id="startAlgorithm" class="btn btn-primary">Start Algorithm</button>
-                    <button id="nextStep" class="btn btn-primary hidden">Next Step</button>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="goInStepsBox">
-                        <label class="form-check-label" for="goInStepsBox">
-                            Go in steps
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="simplifyBox">
-                        <label class="form-check-label" for="simplifyBox">
-                            Simplify
-                        </label>
+                <div class="container-fluid bg-light p-3 mb-5 shadow-lg rounded">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <button id="startAlgorithm" class="btn btn-primary">Start Algorithm</button>
+                            <button id="nextStep" class="btn btn-primary hidden">Next Step</button>
+                            <div class="form-check m-1">
+                                <input class="form-check-input" type="checkbox" value="" id="goInStepsBox">
+                                <label class="form-check-label" for="goInStepsBox">
+                                    Go in steps
+                                </label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input class="form-check-input" type="checkbox" value="" id="simplifyBox">
+                                <label class="form-check-label" for="simplifyBox">
+                                    Simplify
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="container float-right hidden" id="resultContainer">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Result</h5>
+                                        <p class="card-text" id="finalResult"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="table-wrapper-scroll-y my-custom-scrollbar">

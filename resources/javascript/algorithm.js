@@ -127,6 +127,23 @@ let dfaToRegEx = (dfa, simplifyFlag) => {
         }
     }
 
+    let calculateResults = ()=>{
+        if(dfa.final.length){
+            let finalRegex = getRegAt(numberOfStates,parseInt(dfa.initial),parseInt(dfa.final[0]));
+            if(dfa.final.length > 1){
+                for(let i = 1; i < dfa.final.length; i++){
+                    finalRegex = finalRegex.disjun(getRegAt(numberOfStates,parseInt(dfa.initial),parseInt(dfa.final[i])));
+                }
+            }
+            return finalRegex;
+        }else{
+            return RegularExp.getEmptySet();
+        }
+        
+    }
+
+    resultRegex = calculateResults();
+
 
     //TESTS
 
