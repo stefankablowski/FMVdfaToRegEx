@@ -79,7 +79,6 @@ class RegularExp {
     }
 
     simplify() {
-        //console.log(`Current : ${this.toString()}`);
         if (this.type === 'base') {
             return new RegularExp(this.value);
         }
@@ -111,17 +110,17 @@ class RegularExp {
         }
 
         //a+a
-        else if (this.left.toString() === this.right.toString()) {
+        else if (RegularExp.equals(this.left,this.right)) {
             return this.left.simplify();
         }
 
         //(a)* + a = (a)*
-        else if (this.left.toString() === `(${this.right.toString()})*` && this.left.type === 'kleene') {
+        else if (this.left.type === 'kleene' && RegularExp.equals(this.left.left,this.right)) {
             return this.left.simplify();
         }
 
         // a + (a)* = (a)*
-        else if (`(${this.left.toString()})*` === this.right.toString() && this.right.type === 'kleene') {
+        else if (this.right.type === 'kleene' && RegularExp.equals(this.left,this.right.left)) {
             return this.right.simplify();
         }
 
@@ -152,14 +151,9 @@ class RegularExp {
         }
 
         //(a)*(a)* = (a)*
-        else if ((this.left.toString() === this.right.toString())
-            && (this.left.type === 'kleene')
-            && (this.right.type === 'kleene')) {
-            return this.left.simplify();
-        }
-
-        //(a)*a = (a)*
-        else if ((this.left.type === 'kleene') && (this.left.toString() === `(${this.right.toString()})*`)) {
+        else if ((this.left.type === 'kleene')
+            && (this.right.type === 'kleene')
+            && (RegularExp(this.left, this.right))) {
             return this.left.simplify();
         }
 
