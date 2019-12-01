@@ -12,6 +12,6 @@
 }
 
 .hidden {
-    visibility: collapse;
+    visibility: collapse !important;
 }
  

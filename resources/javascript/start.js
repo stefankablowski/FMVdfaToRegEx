@@ -1,6 +1,34 @@
 let allEntries = new Array();
 let resultRegex = null;
 let simplify = false;
+let currentPos = 0;
+let examples = {
+"Simple DFA": 
+`{
+    initial: "1",
+    states: {
+        1: {
+            on: {
+                a: "2",
+                b: "3"
+            }
+        },
+        2: {
+            on: {
+                a: "2",
+                b: "3"
+            }
+        },
+        3: {
+        }
+    },
+    final:[ "3" ]
+}`,
+"Big DFA":
+`hallo`,
+"Huge DFA":
+`hallo2`
+}
 
 let dfa = {
     initial: '1',
@@ -23,31 +51,15 @@ let dfa = {
     final: [3],
 }
 
-let currentPos = 0;
+
 
 window.onload = ()=>{
-    let example1 = 
-    `{
-        initial: "1",
-        states: {
-            1: {
-                on: {
-                    a: "2",
-                    b: "3"
-                }
-            },
-            2: {
-                on: {
-                    a: "2",
-                    b: "3"
-                }
-            },
-            3: {
-            }
-        },
-        final:[ "3" ]
-    }`
-    document.getElementById('inputDFA').value = example1;
+
+    document.getElementById('inputDFA').value = examples["Simple DFA"];
+    if(localStorage.getItem("lastSelection") !== null){
+        document.getElementById('selectExample').value = localStorage.getItem("lastSelection");
+    }
+    manageSelection();
 }
 
 let printLine = (entry) => {
@@ -98,13 +110,25 @@ let startAlgorithm = ()=>{
     //Note here: never use ":" inside values
     let badJSONdfa = String(document.getElementById('inputDFA').value).replace(/(\r\n|\n|\r)/gm, "");
     goodJSONdfa = badJSONdfa.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
-    parsedDFA = JSON.parse(goodJSONdfa);
+
+    try{
+        parsedDFA = JSON.parse(goodJSONdfa);
+        document.getElementById('parseWentWrong').innerHTML = ""
+    }
+    catch{
+        document.getElementById('parseWentWrong').innerHTML = 
+        `<div class="alert alert-danger" role="alert" >
+        <div>Check your Input. </div>
+        Make sure last items do not end with comma. Make sure values are Strings.
+        </div>`
+    }
+    
     dfaToRegEx(parsedDFA,simplify);
     document.getElementById('finalResult').innerHTML = resultRegex.toString();
     
 
     if(document.getElementById('goInStepsBox').checked){
-        
+
         document.getElementById('nextStep').classList.remove('hidden');
     }else{
         allEntries.forEach((entry)=>{printLine(entry)});
@@ -129,8 +153,33 @@ let nextStep = ()=>{
     console.log(allEntries.length);
 }
 
+let manageSelection = ()=>{
+    localStorage.setItem('lastSelection',document.getElementById('selectExample').value);
+    if(document.getElementById('selectExample').value === 'Try it yourself'){
+        console.log("try it yourself")
+        
+        if(localStorage.getItem("userInput") !== null){
+            document.getElementById('inputDFA').value = localStorage.getItem("userInput");
+        }else{
+            localStorage.setItem("userInput","");
+            document.getElementById('inputDFA').value = "";
+        }
+        
+    }else{
+        
+        document.getElementById('inputDFA').value = examples[document.getElementById('selectExample').value];
+    }
+    
+}
+
 
 
 document.getElementById('startAlgorithm').addEventListener('click',startAlgorithm);
 document.getElementById('nextStep').addEventListener('click',nextStep);
 document.getElementById('goInStepsBox').addEventListener('click',()=>{document.getElementById('nextStep').classList.add('hidden');})
+document.getElementById('selectExample').addEventListener('change',manageSelection)
+document.getElementById('inputDFA').addEventListener('input',()=>{
+    if(document.getElementById('selectExample').value === "Try it yourself"){
+        localStorage.setItem("userInput", document.getElementById('inputDFA').value)
+    }
+})
