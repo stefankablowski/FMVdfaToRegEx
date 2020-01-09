@@ -3,7 +3,7 @@ let path = require('path');
 
 module.exports = (app)=>{
 
-    console.log(__dirname);
+    console.log(process.cwd());
 
     //Setup server
     app.listen(1234, '0.0.0.0');
