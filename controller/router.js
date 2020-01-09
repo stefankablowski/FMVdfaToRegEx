@@ -11,9 +11,9 @@ module.exports = (app)=>{
     
     //Serve HTML
     app.get('/dfa',(req, res)=>{
-        res.sendFile(path.resolve('index.html'));
+        res.sendFile('index.html',{ root: './'});
     });
     app.get('/dfa/',(req, res)=>{
-        res.sendFile(path.resolve('index.html'));
+        res.sendFile('index.html',{ root: './'});
     });
 }
