@@ -3,8 +3,6 @@ let path = require('path');
 
 module.exports = (app)=>{
 
-    console.log(process.cwd());
-
     //Setup server
     app.listen(1234, '0.0.0.0');
 
@@ -13,9 +11,9 @@ module.exports = (app)=>{
     
     //Serve HTML
     app.get('/dfa',(req, res)=>{
-        res.sendFile('index.html',{ root: './'});
+        res.sendFile('index.html',{ root: process.cwd()});
     });
     app.get('/dfa/',(req, res)=>{
-        res.sendFile('index.html',{ root: './'});
+        res.sendFile('index.html',{ root: process.cwd()});
     });
 }
