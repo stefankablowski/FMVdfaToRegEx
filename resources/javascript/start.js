@@ -25,7 +25,36 @@ let examples = {
     final:[ "3" ]
 }`,
 "Big DFA":
-`hallo`,
+`{
+    initial: "1",
+    states: {
+        1: {
+            on: {
+                a: "2",
+                b: "1"
+            }
+        },
+        2: {
+            on: {
+                a: "2",
+                b: "3"
+            }
+        },
+        3: {
+            on: {
+                a: "4",
+                b: "3"
+            }
+        },
+        4: {
+            on: {
+                a: "4",
+                b: "4"
+            }
+        }
+    },
+    final:[ "4" ]
+}`,
 "Huge DFA":
 `hallo2`
 }
@@ -124,7 +153,7 @@ let startAlgorithm = ()=>{
     }
     
     dfaToRegEx(parsedDFA,simplify);
-    document.getElementById('finalResult').innerHTML = resultRegex.toString();
+    document.getElementById('finalResult').innerHTML = resultRegex.simplifyMax().toString();
     
 
     if(document.getElementById('goInStepsBox').checked){

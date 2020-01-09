@@ -1,10 +1,10 @@
 let express = require('express');
 let router = require('./controller/router');
-let data = require('./model/data');
+
 
 //Start server
 app = express();
-router(app, data);
+router(app);
 
 console.log("hello");
 

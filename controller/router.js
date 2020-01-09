@@ -1,7 +1,7 @@
 let express = require('express');
 let path = require('path');
 
-module.exports = (app, data)=>{
+module.exports = (app)=>{
 
     //Setup server
     app.listen(1234, '0.0.0.0');
@@ -16,19 +16,4 @@ module.exports = (app, data)=>{
     app.get('/dfa/',(req, res)=>{
         res.sendFile(path.resolve('index.html'));
     });
-    
-    //Get user data
-    app.get('/dfa/data',(req, res)=>{
-        data()
-        .then(a => {
-            res.type("json");
-            res.send(JSON.stringify(a));
-        }
-        ).catch(b =>{
-            res.send("404");
-        })
-
-        
-    });
-
 }
