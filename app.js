@@ -1,10 +1,11 @@
 let express = require('express');
 let router = require('./controller/router');
 
+let rootPath = ''+__dirname;
 
 //Start server
 app = express();
-router(app);
+router(app, rootPath);
 
 console.log("hello");
 
