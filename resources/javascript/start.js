@@ -56,7 +56,24 @@ let examples = {
     final:[ "4" ]
 }`,
 "Huge DFA":
-`hallo2`
+`{
+    initial: "1",
+    states: {
+        1: {
+            on: {
+                a: "1",
+                b: "2"
+            }
+        },
+        2: {
+            on: {
+                a: "2",
+                b: "2"
+            }
+        }
+    },
+    final:[ "2" ]
+}`
 }
 
 let dfa = {
