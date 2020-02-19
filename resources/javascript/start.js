@@ -55,7 +55,7 @@ let examples = {
     },
     final:[ "4" ]
 }`,
-"Huge DFA":
+"Small DFA":
 `{
     initial: "1",
     states: {
